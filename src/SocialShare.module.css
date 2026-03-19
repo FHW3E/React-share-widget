@@ -1,0 +1,110 @@
+.list {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.inline {
+  position: static;
+}
+
+.floating {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  flex-direction: column;
+}
+
+.left {
+  left: 1rem;
+}
+
+.right {
+  right: 1rem;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+  background: transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.itemWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.item:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.item:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.label {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+  line-height: 1;
+  font-weight: 500;
+  padding-right: 0.8rem;
+}
+
+.sm .item {
+  min-width: 34px;
+  min-height: 34px;
+  padding: 0.2rem;
+}
+
+.md .item {
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0.22rem;
+}
+
+.lg .item {
+  min-width: 52px;
+  min-height: 52px;
+  padding: 0.3rem;
+}
+
+.brand .item {
+  color: #fff;
+}
+
+.brand .label {
+  color: #fff;
+}
+
+.light .item {
+  background: #fff;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.light .label {
+  color: #111827;
+}
+
+.dark .item {
+  background: #111827;
+  color: #fff;
+  border-color: #374151;
+}
+
+.dark .label {
+  color: #fff;
+}
