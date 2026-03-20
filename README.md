@@ -36,13 +36,13 @@ Try the live demo here: [react-share-widget-demo](https://react-share-widget-dem
 
 ## Visual Examples
 
+Bubble buttons (icon + text):
+
+![React-Social-Widget Bubble Buttons](https://react-share-widget-demo.vercel.app/assets/React-Share-Widget%20Bubble%20Buttons.png)
+
 Icon-only buttons:
 
-![React-Social-Widget Icon Only Buttons](./public/React-Share-Widget%20Icon%20Only%20Buttons.png)
-
-Buttons with labels:
-
-![React-Social-Widget Bubble Buttons](./public/React-Share-Widget%20Bubble%20Buttons.png)
+![React-Social-Widget Icon Only Buttons](https://react-share-widget-demo.vercel.app/assets/React-Share-Widget%20Icon%20Only%20Buttons.png)
 
 ## Embed It Anywhere (Inline or Floating)
 
