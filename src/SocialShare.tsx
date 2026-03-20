@@ -148,8 +148,19 @@ export const SocialShare = ({
 
         const defaultIconFgColor = theme === "light" ? "#111827" : "#FFFFFF";
         const resolvedIconFgColor = iconFgColor || defaultIconFgColor;
-        const baseCustomIconSize = pixelSize - 12;
-        const customIconSize =
+        // `react-social-icons` glyphs include some built-in padding, while our SVG paths can be closer to the viewBox edge.
+        // Keep separate sizing for react-social-icons and custom SVG icons.
+        const reactGlyphSize = Math.max(10, pixelSize - 12);
+        const reactGlyphSizeNonIconOnly = Math.max(10, Math.round(reactGlyphSize * 1.2)); // +20%
+        const reactGlyphSizeNonIconOnlyAdjusted =
+          network === "x" || network === "telegram"
+            ? Math.max(10, Math.round(reactGlyphSizeNonIconOnly * 0.8))
+            : reactGlyphSizeNonIconOnly;
+
+        // Custom SVG icon sizing baseline (restored to the earlier "good" icon-only sizing).
+        // Then, in non-icon-only mode, scale the pill icons based on requested relative adjustments.
+        const baseCustomIconSize = Math.max(10, pixelSize - 12);
+        const customIconSizeIconOnly =
           network === "facebook-messenger" || network === "evernote"
             ? Math.max(10, Math.round(baseCustomIconSize * 0.9))
             : network === "hacker-news" || network === "flipboard"
@@ -157,6 +168,21 @@ export const SocialShare = ({
               : network === "text-message"
                 ? Math.max(10, Math.round(baseCustomIconSize * 1.0))
                 : baseCustomIconSize;
+
+        let customIconSizeNonIconOnly = Math.max(
+          10,
+          Math.round(customIconSizeIconOnly * 1.2 * 0.8) // custom icons 20% smaller than current non-icon-only state
+        );
+        // facebook-messenger looks oversized in pill mode; make it 20% smaller.
+        if (network === "facebook-messenger") {
+          customIconSizeNonIconOnly = Math.max(10, Math.round(customIconSizeNonIconOnly * 0.8));
+        }
+        // evernote also needs a smaller pill icon.
+        if (network === "evernote") {
+          customIconSizeNonIconOnly = Math.max(10, Math.round(customIconSizeNonIconOnly * 0.8));
+        }
+
+        const customIconSize = iconOnly ? customIconSizeIconOnly : customIconSizeNonIconOnly;
 
         if (network === "copy-link") {
           const copiedLabel = copied ? "Copied" : baseLabel;
@@ -192,7 +218,7 @@ export const SocialShare = ({
             <button
               key={network}
               type="button"
-              className={styles.item}
+              className={!iconOnly ? `${styles.item} ${styles.pillWithLabel}` : styles.item}
               onClick={handleCopy}
               aria-label={copied ? "Link copied" : label}
               title={copied ? "Link copied" : label}
@@ -203,7 +229,16 @@ export const SocialShare = ({
                 color: resolvedIconFgColor
               }}
             >
-              <CustomNetworkIcon network={network} size={customIconSize} fgColor={resolvedIconFgColor} />
+              {!iconOnly ? (
+                <span
+                  className={styles.customIconSlot}
+                  style={{ width: customIconSize, height: customIconSize }}
+                >
+                  <CustomNetworkIcon network={network} size={customIconSize} fgColor={resolvedIconFgColor} />
+                </span>
+              ) : (
+                <CustomNetworkIcon network={network} size={customIconSize} fgColor={resolvedIconFgColor} />
+              )}
               {!iconOnly && <span className={styles.label}>{copiedLabel}</span>}
             </button>
           );
@@ -216,7 +251,7 @@ export const SocialShare = ({
           return (
             <a
               key={network}
-              className={styles.item}
+              className={!iconOnly ? `${styles.item} ${styles.pillWithLabel}` : styles.item}
               href={shareUrl}
               {...linkProps}
               aria-label={label}
@@ -225,7 +260,16 @@ export const SocialShare = ({
                 backgroundColor: resolvedButtonBgColor
               }}
             >
-              <CustomNetworkIcon network={network} size={customIconSize} fgColor={resolvedIconFgColor} />
+              {!iconOnly ? (
+                <span
+                  className={styles.customIconSlot}
+                  style={{ width: customIconSize, height: customIconSize }}
+                >
+                  <CustomNetworkIcon network={network} size={customIconSize} fgColor={resolvedIconFgColor} />
+                </span>
+              ) : (
+                <CustomNetworkIcon network={network} size={customIconSize} fgColor={resolvedIconFgColor} />
+              )}
               {!iconOnly && <span className={styles.label}>{baseLabel}</span>}
             </a>
           );
@@ -234,19 +278,96 @@ export const SocialShare = ({
         const resolvedButtonBgColor =
           buttonBgColor || (theme === "brand" ? buttonColor : theme === "dark" ? "#111827" : "#FFFFFF");
 
+        const handleOpen = () => {
+          if (typeof window === "undefined") return;
+          if (!shareUrl) return;
+          if (isHttpUrl) {
+            window.open(shareUrl, "_blank", "noopener,noreferrer");
+          } else {
+            window.location.href = shareUrl;
+          }
+        };
+
+        if (iconOnly) {
+          return (
+            <div key={network} className={styles.itemWrapper}>
+              <span className={styles.reactIconWrapper}>
+                <SocialIcon
+                  url={shareUrl}
+                  network={reactIconKey}
+                  {...linkProps}
+                  aria-label={label}
+                  title={label}
+                  style={{ width: pixelSize, height: pixelSize }}
+                  bgColor={resolvedButtonBgColor}
+                  fgColor={resolvedIconFgColor}
+                />
+              </span>
+            </div>
+          );
+        }
+
+        // Non-icon-only: render a "pill" background around both icon + label.
+        // We make the SocialIcon's background transparent so the wrapper provides consistent styling.
         return (
-          <div key={network} className={styles.itemWrapper}>
-            <SocialIcon
-              url={shareUrl}
-              network={reactIconKey}
-              {...linkProps}
-              aria-label={label}
-              title={label}
-              style={{ width: pixelSize, height: pixelSize }}
-              bgColor={resolvedButtonBgColor}
-              fgColor={resolvedIconFgColor}
-            />
-            {!iconOnly && <span className={styles.label}>{baseLabel}</span>}
+          <div
+            key={network}
+            className={`${styles.item} ${styles.pillWithLabel}`}
+            role="link"
+            tabIndex={0}
+            aria-label={label}
+            title={label}
+            style={{ backgroundColor: resolvedButtonBgColor }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleOpen();
+              }
+            }}
+          >
+            <span
+              className={styles.iconSlot}
+              style={{
+                width: reactGlyphSizeNonIconOnlyAdjusted,
+                height: reactGlyphSizeNonIconOnlyAdjusted
+              }}
+            >
+              <span className={styles.reactIconWrapper}>
+                <SocialIcon
+                  url={shareUrl}
+                  network={reactIconKey}
+                  {...linkProps}
+                  aria-label={label}
+                  title={label}
+                  style={{
+                    width: reactGlyphSizeNonIconOnlyAdjusted,
+                    height: reactGlyphSizeNonIconOnlyAdjusted,
+                    backgroundColor: "transparent"
+                  }}
+                  bgColor="transparent"
+                  fgColor={resolvedIconFgColor}
+                />
+              </span>
+            </span>
+            <span
+              className={styles.label}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleOpen();
+              }}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleOpen();
+                }
+              }}
+            >
+              {baseLabel}
+            </span>
           </div>
         );
       })}

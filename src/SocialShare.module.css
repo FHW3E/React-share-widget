@@ -45,6 +45,11 @@
   gap: 0.45rem;
 }
 
+.itemWithLabel {
+  /* Legacy hook; prefer `.pillWithLabel`. */
+  justify-content: flex-start;
+}
+
 .item:hover {
   transform: translateY(-1px);
   opacity: 0.95;
@@ -61,24 +66,66 @@
   line-height: 1;
   font-weight: 500;
   padding-right: 0.8rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 .sm .item {
   min-width: 34px;
-  min-height: 34px;
-  padding: 0.2rem;
+  height: 34px;
+  padding: 0;
 }
 
 .md .item {
   min-width: 42px;
-  min-height: 42px;
-  padding: 0.22rem;
+  height: 42px;
+  padding: 0;
 }
 
 .lg .item {
   min-width: 52px;
-  min-height: 52px;
-  padding: 0.3rem;
+  height: 52px;
+  padding: 0;
+}
+
+.customIconWithLabel {
+  /* Left padding is handled by `.pillWithLabel` for consistent alignment. */
+  transform: none;
+}
+
+.customIconPadLeft {
+  /* Adds ~5px internal left padding between the custom SVG glyph and the pill border. */
+  transform: translateX(5px);
+}
+
+.iconSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.customIconSlot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 5px; /* 5px inset from the pill border */
+  margin-right: 5px; /* extra gap between icon and text */
+  flex: 0 0 auto;
+}
+
+.reactIconWrapper {
+  /* Ensure react-social-icons are centered consistently across different glyphs. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.pillWithLabel {
+  justify-content: flex-start;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 .brand .item {
