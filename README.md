@@ -28,6 +28,12 @@ export function ArticleShare() {
 
 That’s it. `SocialShare` will automatically use `window.location.href` and `document.title` (SSR-safe).
 
+## Live Demo
+
+Want to see it in action before you integrate?
+
+Try the live demo here: [react-share-widget-demo](https://react-share-widget-demo.vercel.app/)
+
 ## Embed It Anywhere (Inline or Floating)
 
 ### Inline (inside your content)
