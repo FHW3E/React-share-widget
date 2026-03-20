@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "description": "A React social share button library with smart defaults and broad network support.",
   "homepage": "https://woopsocial.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FHW3E/React-share-widget"
+  },
+  "bugs": {
+    "url": "https://github.com/FHW3E/React-share-widget/issues"
+  },
   "keywords": [
     "react",
     "social share",
