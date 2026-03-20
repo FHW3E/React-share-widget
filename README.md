@@ -34,6 +34,16 @@ Want to see it in action before you integrate?
 
 Try the live demo here: [react-share-widget-demo](https://react-share-widget-demo.vercel.app/)
 
+## Visual Examples
+
+Icon-only buttons:
+
+![React-Social-Widget Icon Only Buttons](./public/React-Share-Widget%20Icon%20Only%20Buttons.png)
+
+Buttons with labels:
+
+![React-Social-Widget Bubble Buttons](./public/React-Share-Widget%20Bubble%20Buttons.png)
+
 ## Embed It Anywhere (Inline or Floating)
 
 ### Inline (inside your content)
